@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spring.mapper.popcorn.NreplyMapper">
+
+<select id="list" parameterType="Map" resultType="NreplyDTO">                                                                                        
+select nreply_num, nreply_content, nreply_date, notice_num, id, r
+	from(
+    	select nreply_num, nreply_content, nreply_date, notice_num, id, rownum r
+    	from(                                                                                   
+			select nreply_num, nreply_content, to_char(nreply_date, 'yyyy-mm-dd') nreply_date, notice_num, id 
+			from nreply
+			where notice_num = #{notice_num}
+			order by nreply_num desc
+			)
+		)
+		<![CDATA[
+		where r >= #{sno} and r <= #{eno} 
+		]]>                                                                                          
+</select>
+
+<select id="total" parameterType="int" resultType="int">
+	select count(*)
+	from nreply
+	where notice_num = #{notice_num}
+</select>
+
+<select id="read" parameterType="int" resultType="NreplyDTO">
+	select nreply_num, nreply_content, to_char(nreply_date, 'yyyy-mm-dd') nreply_date, notice_num, id
+	from nreply
+	where nreply_num = #{nreply_num}
+</select>
+
+<insert id="create" parameterType="NreplyDTO">
+	<selectKey keyProperty="nreply_num" resultType="int" order="BEFORE">
+	select nvl(max(nreply_num), 0) +1 from nreply
+	</selectKey>
+	insert into nreply(nreply_num,
+		nreply_content, nreply_date, notice_num, id)
+	values(#{nreply_num},
+		#{nreply_content}, sysdate, #{notice_num}, #{id})
+</insert>
+
+<update id="update" parameterType="NreplyDTO">
+	update nreply
+	set nreply_content = #{nreply_content}
+	where nreply_num = #{nreply_num}
+</update>
+
+<delete id="delete" parameterType="int">
+	delete from nreply
+	where nreply_num = #{nreply_num}                 
+</delete>
+
+<select id="rcount" parameterType="int" resultType="int">
+	select count(*) from nreply
+	where notice_num = #{notice_num}
+</select>
+
+<delete id="bdelete" parameterType="int">
+	delete from nreply
+	where notice_num = #{notice_num}
+</delete>
+
+</mapper>

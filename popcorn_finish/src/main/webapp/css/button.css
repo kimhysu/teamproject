@@ -1,0 +1,104 @@
+@charset "UTF-8";
+.btn1 {
+   background-color: #141414;  
+   color: #eee6c4;
+   border: 2px solid #f44336; 
+   font-weight: 700px;
+}
+.btn1:hover {
+   color: #f44336;
+}
+
+#search{
+	background-color: #141414;
+	color: #eee6c4;
+	border: 2px solid #f44336; 
+	height: 36px;
+}
+input[class='form-control']{
+	background-color: #141414;
+	color: #eee6c4;
+	border: 2px solid #f44336; 
+	height: 36px;
+}
+
+.radio {
+  position: relative;
+  cursor: pointer;
+  line-height: 20px;
+  font-size: 14px;
+  margin: 15px;
+  display: -webkit-inline-box;
+}
+.radio .label-radio {
+  position: relative;
+  display: block;
+  margin-right: 10px;
+  width: 20.2px;
+  height: 20px;
+  border: 2px solid #c8ccd4;
+  border-radius: 100%;
+}
+.radio .label-radio:after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background: #eee6c4;
+  transition: all 0.2s ease;
+  opacity: 0.08;
+}
+.radio:hover .label-radio:after {
+  transform: scale(3.5);
+  opacity: 0.1;
+}
+input[type="radio"]:checked + .label-radio {
+  border-color: #f44336;
+}
+input[type="radio"]:checked + .label-radio:after {
+  transform: scale(1);
+  transition: all 0.2s cubic-bezier(0.35, 0.9, 0.4, 0.9);
+  opacity: 1;
+}
+.checkbox{
+  position: relative;
+  cursor: pointer;
+  line-height: 20px;
+  font-size: 14px;
+  margin: 15px;
+  display: -webkit-inline-box;
+}
+.checkbox .label-cbk {
+  position: relative;
+  display: block;
+  margin-right: 10px;
+  width: 20.2px;
+  height: 20px;
+  border: 2px solid #c8ccd4;
+}
+.checkbox .label-cbk:after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 10px;
+  height: 10px;
+  background: #eee6c4;
+  transition: all 0.2s ease;
+  opacity: 0.08;
+}
+.checkbox:hover .label-cbk:after {
+  transform: scale(3.5);
+  opacity: 0.1;
+}
+input[type="checkbox"]:checked + .label-cbk {
+  border-color: #f44336;
+}
+input[type="checkbox"]:checked + .label-cbk:after {
+  transform: scale(1);
+  transition: all 0.2s cubic-bezier(0.35, 0.9, 0.4, 0.9);
+  opacity: 1;
+}

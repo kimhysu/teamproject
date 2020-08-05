@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE  tiles-definitions PUBLIC 
+    "-//Aapche Software Foundation//DTD Tiles Configuration 2.0//EN" 
+    "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+	<definition name="main"
+		template="/WEB-INF/views/menu/template.jsp">
+		<put-attribute name="header"
+			value="/WEB-INF/views/menu/top1.jsp" />
+	</definition>
+
+
+	<!-- <definition name="/bbs/list" extends="main"> -->
+	<!-- <put-attribute name="title" value="회원목록" ></put-attribute> -->
+	<!-- <put-attribute name="body" value="/WEB-INF/views/bbs/list.jsp" /> -->
+	<!-- </definition> -->
+
+<!-- 	<definition name="/home" extends="main"> -->
+<!-- 		<put-attribute name="title" value="popcorn"></put-attribute> -->
+<!-- 		<put-attribute name="body" -->
+<!-- 			value="/WEB-INF/views/home.jsp" /> -->
+<!-- 	</definition> -->
+
+	<definition name="/review/create" extends="main">
+		<put-attribute name="title" value="Review Create"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/views/review/createForm.jsp" />
+	</definition>
+
+	<definition name="/review/update" extends="main">
+		<put-attribute name="title" value="Review Update"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/views/review/updateForm.jsp" />
+	</definition>
+
+	<definition name="/review/list" extends="main">
+		<put-attribute name="title" value="Review List"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/views/review/list.jsp" />
+	</definition>
+
+	<definition name="/review/read" extends="main">
+		<put-attribute name="title" value="Review Read"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/views/review/read.jsp" />
+	</definition>
+	
+	<definition name="/cart/list" extends="main">
+		<put-attribute name="title" value="Cart List"></put-attribute>
+		<put-attribute name="body"
+			value="/WEB-INF/views/cart/list.jsp" />
+	</definition>
+</tiles-definitions>

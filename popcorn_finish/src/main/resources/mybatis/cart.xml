@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spring.mapper.popcorn.CartMapper">
+
+	<insert id="create" parameterType="CartDTO">
+	insert into cart(cart_num,id,movie_num)
+	values((select nvl(max(cart_num),0) + 1 as cart_num from cart),#{id},#{movie_num})
+	</insert>
+	
+	<delete id="delete" parameterType="int">
+	delete from cart
+	where cart_num = #{cart_num}
+	</delete>
+	
+	<delete id="deleteAll" parameterType="Map">
+	delete from cart
+	where cart_num in
+	<foreach collection="list" item="item" separator="," open="(" close=")" index="index">
+	#{item.cart_num}
+	</foreach>
+	</delete>
+	
+	<select id="dupCheck" parameterType="Map" resultType="int">
+	select count(*)
+	from cart
+	where id = #{id}
+	and movie_num = #{movie_num}
+	</select> 
+	
+	<select id="totalprice" parameterType="string" resultType="int">
+	select nvl(sum(movie_price),0) money
+	from cart c, movie mo
+	where c.movie_num = mo.movie_num
+	and c.id = #{id}
+	</select> 
+	
+	<select id="list" parameterType="string" resultType="CartDTO">
+	select c.cart_num, c.id, mo.movie_num, 
+          mo.movie_name, mo.movie_price
+	from member me, movie mo, cart c
+	where me.id = c.id
+	and mo.movie_num = c.movie_num
+	and c.id = #{id}
+	order by c.id
+	</select>
+</mapper>

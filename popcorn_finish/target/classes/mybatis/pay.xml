@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spring.mapper.popcorn.PayMapper">
+	
+	<insert id="createAll" parameterType="map">
+			insert into pay_item (pay_item_num, pay_num, pay_item_price, movie_num,id)
+			select pay_item_seq.nextval, pay_num, pay_item_price, movie_num,id  from
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator="union all">
+			select #{pay_num} pay_num, #{item.movie_price} pay_item_price, #{item.movie_num} movie_num, #{id} id from dual
+		</foreach>
+	</insert>
+	
+
+	<update id="updatePaysum" parameterType="map" >
+		update pay set
+		pay_sum=#{pay_sum}
+		where pay_num=#{pay_num}
+	</update>
+	
+	<insert id="create" parameterType="map">
+	 	<selectKey order="BEFORE" keyProperty="pay_num" resultType="int">
+	 		select nvl(max(pay_num),0) + 1 as pay_num from pay
+	 	</selectKey>
+		insert into pay(pay_num,id,pay_way,pay_date)
+		values(#{pay_num},
+		#{id},#{pay_way},sysdate)
+	</insert>
+	
+	<select id="list" parameterType="String" resultType="PayDTO">
+	select mo.movie_name, pi.pay_item_price, to_char(pa.pay_date,'yyyy-mm-dd') pay_date
+	from movie mo, pay_item pi, pay pa
+	where mo.movie_num = pi.movie_num
+	and pa.pay_num = pi.pay_num
+	and pi.id = #{id}
+	</select>
+	
+	<select id="dupcheck" parameterType="map" resultType="int">
+	select count(*)
+	from pay_item
+	where id = #{id}
+	and movie_num = #{movie_num}
+	</select>
+	
+</mapper>

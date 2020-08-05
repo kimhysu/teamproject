@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">	<!-- myb,atis라고 오타 때문에 ctrl+tap이 안먹힘..! -->
+
+<mapper namespace="spring.mapper.popcorn.NoticeMapper">
+
+<select id="list" parameterType="Map" resultType="NoticeDTO">                                                                                        
+select notice_num, notice_title, notice_content, notice_type, notice_pw, notice_date, id, r
+	from(
+    	select notice_num, notice_title, notice_content, notice_type, notice_pw, notice_date, id, rownum r
+    	from(                                                                                   
+			select notice_num, notice_title, notice_content, notice_type, notice_pw, to_char(notice_date, 'yyyy-mm-dd') notice_date, id 
+			from notice
+			<where>
+				<choose>
+					<when test="col=='notice_title'">
+						notice_title like '%'||#{word}||'%'
+					</when>
+					<when test="col=='notice_content'">
+						notice_content like '%'||#{word}||'%'
+					</when>
+				</choose>
+			</where>
+			order by notice_num desc
+			)
+			)
+		<![CDATA[
+		where r >= #{sno} and r <= #{eno}
+		]]>                                                                                          
+</select>
+<select id="total" parameterType="Map" resultType="int">
+	select count(*)
+	from notice
+	<where>
+		<choose>
+			<when test="col=='notice_title'">
+				notice_title like '%'||#{word}||'%'
+			</when>
+			<when test="col=='notice_content'">
+				notice_content like '%'||#{word}||'%'
+			</when>
+		</choose>
+	</where>
+</select>
+<select id="read" parameterType="int" resultType="NoticeDTO">
+	select notice_num, notice_title, notice_content, notice_type, notice_pw, to_char(notice_date, 'yyyy-mm-dd') notice_date, id
+	from notice
+	where notice_num = #{notice_num}
+</select>
+<insert id="create" parameterType="NoticeDTO">
+	insert into notice(notice_num,
+		notice_title, notice_content, notice_type, notice_pw, notice_date, id)
+	values((select nvl(max(notice_num), 0) +1 as notice_num from notice),
+		#{notice_title}, #{notice_content}, #{notice_type}, #{notice_pw}, sysdate, #{id})
+</insert>
+<update id="update" parameterType="NoticeDTO">
+	update notice
+	set notice_title = #{notice_title},
+    	notice_content = #{notice_content},
+    	notice_type = #{notice_type}
+	where notice_num = #{notice_num}
+</update>
+<delete id="delete" parameterType="int">
+	delete from notice
+	where notice_num = #{notice_num}                 
+</delete>
+<select id="passCheck" parameterType="Map" resultType="int">
+	select count(notice_num)
+	from notice
+	where notice_num = #{notice_num} and notice_pw = #{notice_pw}
+</select>
+</mapper>

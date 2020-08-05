@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spring.mapper.popcorn.ReviewMapper">
+	
+	<select id="movie_name" parameterType="int" resultType="String">
+		select movie_name from movie
+		where movie_num = #{movie_num}
+	</select>
+	
+	<update id="upViewcnt" parameterType="int">
+		update review
+		set review_viewcnt = review_viewcnt + 1
+		where review_num = #{review_num}
+	</update>
+
+	<update id="upThumb" parameterType="int">
+		update review
+		set review_thumb = review_thumb + 1
+		where review_num = #{review_num}
+	</update>
+	
+	<select id="total" parameterType="int"  resultType="int">
+		select
+		count(*) from review
+		where movie_num = #{movie_num}
+	</select>
+
+	<select id="read" parameterType="int" resultType="ReviewDTO">
+		select
+		review_num,review_title,review_content,review_star,
+		review_viewcnt,review_thumb,to_char(review_date,'yyyy-mm-dd')  review_date,id,movie_num
+		from review
+		where
+		review_num = #{review_num}
+	</select>
+
+	<select id="list" parameterType="Map" resultType="ReviewDTO">
+		SELECT review_num, review_title, review_date,
+		review_viewcnt,review_thumb,id, r
+		FROM(
+		SELECT review_num, review_title,
+		review_date,
+		review_viewcnt,review_thumb,id, rownum r
+		FROM (
+		SELECT
+		review_num, review_title, to_char(review_date,'yyyy-mm-dd')  review_date, review_viewcnt,review_thumb,id
+		FROM review
+		where movie_num = #{movie_num}
+		<choose>
+			<when test="col=='thumb'">
+			ORDER BY review_thumb DESC
+			</when>
+			<otherwise>
+			ORDER BY review_num DESC
+			</otherwise>
+		</choose>
+		)
+		)
+		<![CDATA[
+ 		WHERE r >= #{sno} and r <= #{eno}
+ 		]]> 
+	</select>
+
+	<insert id="create" parameterType="ReviewDTO">
+		insert into
+		review(review_num,review_title,review_content,
+		review_star,review_date,id,movie_num)
+		values((select
+		nvl(max(review_num),0) + 1 as review_num from review),
+		#{review_title},#{review_content},#{review_star},
+		sysdate,#{id},#{movie_num})
+	</insert>
+
+	<update id="update" parameterType="ReviewDTO">
+		update review
+		set review_title = #{review_title},
+		review_content = #{review_content},
+		review_star = #{review_star}
+		where review_num = #{review_num}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		delete from review
+		where review_num = #{review_num}
+	</delete>
+	
+	<select id="review_star_avg" parameterType="int" resultType="int">
+	select nvl(avg(review_star),0) from review where movie_num=#{movie_num}
+	</select>
+
+	</mapper>

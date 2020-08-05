@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spring.mapper.popcorn.MemberMovieMapper">
+	<resultMap type="memberDTO" id="manyMap">
+   		<result property="id" column="id"/>
+   		<result property="email" column="email"/>
+   		<result property="pw" column="pw"/>
+   		<collection property="moviedtoList" column="id" javaType="List" ofType="movieDTO"
+   			resultMap="moviedtoListMap"/>
+  	</resultMap>
+   	<resultMap type="movieDTO" id="moviedtoListMap">
+   				<result property="movie_num" column="movie_num"/>
+		    	<result property="movie_name" column="movie_name"/>
+		    	<result property="movie_price" column="movie_price"/>
+		    	<result property="movie_genre_str" column="movie_genre"/>
+		    	<result property="movie_grade" column="movie_grade"/>
+		    	<result property="movie_cast" column="movie_cast"/>
+		    	<result property="movie_date" column="movie_date"/>
+		    	<result property="movie_img1" column="movie_img1"/>
+		    	<result property="movie_img2" column="movie_img2"/>
+		    	<result property="movie_img3" column="movie_img3"/>
+		    	<result property="id" column="id"/>
+   	</resultMap>
+<!--     <select id="passCheck" parameterType="int" resultMap="manyMap"> -->
+<!--     	select count(me.id) -->
+<!-- 		from movie mo, member me -->
+<!-- 		where  mo.id = me.id and me.pw= #{pw} -->
+<!--     </select> -->
+</mapper>

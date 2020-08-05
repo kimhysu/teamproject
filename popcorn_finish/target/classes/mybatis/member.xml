@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spring.mapper.popcorn.MemberMapper">
+
+<update id="updateAuthkey" parameterType="MemberDTO">
+	 update member set 
+	 authkey = #{authkey}
+	 where id = #{id}
+</update>
+<update id="updateAuthstatus" parameterType="MemberDTO">
+	 update member set 
+	 authstatus = #{authstatus}
+	 where id = #{id}
+</update>
+
+	<insert id="create" parameterType="MemberDTO">
+		insert into member(id, email, genre, grade, pw, age, name, gender)
+		values(#{id},#{email},#{genre_str},'H',#{pw},#{age},#{name},#{gender})
+	</insert>
+	
+	<delete id="delete" parameterType="String">
+		delete from member
+		where id = #{id}
+	</delete>
+	
+	<select id="duplicateEmail" parameterType="String"
+		resultType="int">
+		select count(email)
+		from member
+		where email = #{email}
+	</select>
+	
+	<select id="duplicateName" parameterType="String" resultType="int">
+		select count(name)
+		from member
+		where name = #{name}
+	</select>
+	
+	<select id="duplicateId" parameterType="String" resultType="int">
+		select count(id)
+		from member
+		where id = #{id}
+	</select>
+	
+	<select id="getGrade" parameterType="String" resultType="String">
+		select
+		grade from member
+		where id = #{id}
+	</select>
+	
+	<select id="list" parameterType="Map" resultType="MemberDTO">
+		select id, email, genre_str, grade, pw, age, name, gender, r 
+    		from(
+        		select id, email, genre_str, grade, pw, age, name, gender, rownum r
+            from(
+                select id, email, genre as genre_str, grade, pw, age, name, gender
+        		from member
+		<where>
+			<choose>
+				<when test="col=='name'">
+					name like '%' ||#{word}|| '%'
+				</when>
+				<when test="col=='email'">
+					email like '%' ||#{word}|| '%'
+				</when>
+				<when test="col=='id'">
+					id like '%' ||#{word}|| '%'
+				</when>
+			</choose>
+		</where>
+		ORDER BY id DESC
+		)
+		)<![CDATA[where r >= #{sno} and r <= #{eno}]]>
+	</select>
+	
+	<select id="loginCheck" parameterType="Map" resultType="int">
+		select count(*) from member
+		where id = #{id}
+		and pw = #{pw}
+	</select>
+	
+	<select id="read" parameterType="String" resultType="MemberDTO">
+		select id, 
+		email, genre as genre_str, grade, pw, age, name, gender
+		from member
+		where id = #{id}
+	</select>
+	
+	<select id="total" parameterType="Map" resultType="int">
+		select count(*) from member
+		<where>
+			<choose>
+				<when test="col=='name'">
+					name like '%'||#{word}||'%'
+				</when>
+				<when test="col=='email'">
+					email like '%'||#{word}||'%'
+				</when>
+				<when test="col=='id'">
+					id like '%'||#{word}||'%'
+				</when>
+			</choose>
+		</where>
+	</select>
+	<update id="update" parameterType="MemberDTO">
+		update member
+		set
+		name=#{name},
+		email=#{email},
+		genre=#{genre_str}
+		where id = #{id}
+	</update>
+	
+	<update id="updatePw" parameterType="Map">
+		update member
+		set
+		pw = #{pw}
+		where id= #{id}
+	</update>
+	<select id="findId" parameterType="Map" resultType="String">
+		select id
+		from member
+		where name = #{name}
+		and email= #{email}
+	</select>
+	<select id="findPw" parameterType="Map" resultType="String">
+		select pw
+		from member
+		where id = #{id}
+		and email= #{email}
+	</select>
+</mapper>

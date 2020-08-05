@@ -1,0 +1,60 @@
+@charset "UTF-8";
+.navbar{
+border-bottom: 1px solid #4e4c4c;
+}
+.panel{
+    margin-bottom: 0px;
+}
+.main-img::after{
+	content: '';
+	position: fixed;
+	top:0;
+	width:100%;
+	height:100%;
+	background-image: url("../images/avengers.jpg");
+	background-repeat: repeat-y;
+	background-size: cover;
+	display: block;
+	z-index: -1;
+}
+.main{
+	background-color: rgba(0,0,0, 0.3);
+	display: flex;
+	justify-content: center;
+}
+.main-inner{
+	width: 1000px;
+	min-height: 650px;
+	background-color: rgba(0,0,0, 0.75);
+	box-sizing: border-box;
+	margin: 2rem 0;
+	border-radius: 4px;
+	box-shadow: 1px 1px 13px 4px rgba(255,255,255,1);
+	padding: 0 5rem;
+}
+.container{
+	position: relative;
+	_margin: 5% 15px;
+	padding: 20px;
+	margin-top: 20px;
+	width: 100% !important;
+}
+.container3{
+  background: -webkit-linear-gradient(left, #ecb1b1, #d54343);
+  background: linear-gradient(to right, #494949, #000000);
+  font-family: 'Roboto', sans-serif;
+  border-radius: 5px;
+  margin-top: 10px;
+  border: 2px solid #f44336;
+  max-width: 900px;
+  max-height: 650px;
+  margin:10px 0;
+}
+.container-ckeditor{
+  font-family: 'Roboto', sans-serif;
+  border-radius: 5px;
+  margin-top: 10px;
+  border: 2px solid #f44336;
+  max-width: 600px !important;
+  margin:10px 0;
+}

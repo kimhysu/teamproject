@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spring.mapper.popcorn.MovieMapper">
+
+<!-- 	<select id="favorite_movies" parameterType="java.util.List" resultType="MovieDTO"> -->
+<!-- 		select -->
+<!-- 			movie_num,  -->
+<!-- 			movie_name,  -->
+<!-- 			movie_price,  -->
+<!-- 			movie_content,  -->
+<!-- 			movie_genre as movie_genre_str, -->
+<!-- 			movie_grade,  -->
+<!-- 			movie_cast,  -->
+<!-- 			movie_date,  -->
+<!-- 			movie_img1,  -->
+<!-- 			movie_img2,  -->
+<!-- 			movie_img3,  -->
+<!-- 			id -->
+<!-- 		from movie -->
+<!-- 		where 1=1 and -->
+<!-- 		<foreach collection="list" item="i" separator="or" open="(" close=")"> -->
+<!-- 			movie_genre like '%'||#{i}||'%' -->
+<!-- 		</foreach> -->
+<!-- 	</select> -->
+	<select id="favorite_movies" parameterType="Map" resultType="MovieDTO">
+		select
+			movie_num, 
+			movie_name, 
+			movie_price, 
+			movie_content, 
+			movie_genre as movie_genre_str,
+			movie_grade, 
+			movie_cast, 
+			movie_date, 
+			movie_img1, 
+			movie_img2, 
+			movie_img3, 
+			id
+		from movie
+		<where>
+		1=1 and
+		<foreach collection="list" item="i" separator="or" open="(" close=")">
+			movie_genre like '%'||#{i}||'%' 
+		</foreach>
+          </where>
+	</select>
+	
+	<update id="update_movie_img" parameterType="Map">
+	  update movie
+	  set movie_img1 = #{movie_img1},
+	  movie_img2 = #{movie_img2},
+	  movie_img3 = #{movie_img3}
+	  where movie_num = #{movie_num}
+	</update>
+	
+	<insert id="create" parameterType="MovieDTO">  
+    insert into movie(movie_num, movie_name, movie_price, movie_content, movie_genre, 
+    movie_grade, movie_cast, movie_img1, movie_img2, movie_img3, movie_date, id) 
+	values((select nvl(max(movie_num),0)+1 from movie),#{movie_name},#{movie_price},#{movie_content},
+	#{movie_genre_str},#{movie_grade},#{movie_cast},#{movie_img1},#{movie_img2},#{movie_img3},#{movie_date}, #{id})                   
+	</insert>
+		
+	<select id ="review_list" resultType="MovieDTO"> 
+	select m.movie_num, m.movie_name, m.movie_price , m.movie_content, m.movie_grade, m.movie_date, 
+	m.movie_img1, m.movie_img2, m.movie_img3, m.movie_cast, m.movie_genre as movie_genre_str, m.id,
+	(select count(*) from review r where r.movie_num = m.movie_num) as review_cnt 
+	from movie m 
+	order by 
+	review_cnt desc
+	</select>
+	
+	<select id ="review_avg_list" resultType="MovieDTO"> 
+	select m.movie_num, m.movie_name, m.movie_price , m.movie_content, m.movie_grade, m.movie_date, 
+	m.movie_img1, m.movie_img2, m.movie_img3, m.movie_cast, m.movie_genre as movie_genre_str, m.id,
+	(select nvl(avg(review_star),0) from review r where r.movie_num = m.movie_num) as review_avg 
+	from movie m 
+	order by review_avg desc
+	</select>
+	
+	<select id="col_word_list" parameterType="Map" resultType="MovieDTO">
+	select movie_num, movie_name, movie_price, movie_content, movie_genre_str, movie_grade, movie_cast, movie_date, movie_img1, movie_img2, movie_img3, id,  r
+	from(
+    select movie_num, movie_name, movie_price, movie_content, movie_genre_str, movie_grade, movie_cast, movie_date, movie_img1, movie_img2, movie_img3, id, rownum r
+    	from(
+        select movie_num, movie_name, movie_price, movie_content, movie_genre as movie_genre_str, movie_grade, movie_cast, movie_date, movie_img1, movie_img2, movie_img3, id
+        from movie
+        <where>
+           <choose>
+           		<when test="col=='movie_cast'">
+           			movie_cast like '%'||#{word}||'%'
+           		</when>
+           		<when test="col=='movie_name'">
+           			movie_name like '%'||#{word}||'%'
+           		</when>	
+           		<when test="col=='movie_content'">
+           			movie_content like '%'||#{word}||'%'
+           		</when>	
+           		<when test="col=='movie_name_movie_content'">
+           			movie_name like '%'||#{word}||'%'
+           			or
+           			movie_content like '%'||#{word}||'%'
+           		</when>	
+           </choose>
+          </where>
+        order by movie_date desc
+        )
+	) 
+	</select>
+	
+	<select id="list" parameterType="Map" resultType="MovieDTO">
+	select movie_num, movie_name, movie_price, movie_content, movie_genre, movie_grade, movie_cast, movie_date, movie_img1, movie_img2, movie_img3, id,  r
+	from(
+    select movie_num, movie_name, movie_price, movie_content, movie_genre, movie_grade, movie_cast, movie_date, movie_img1, movie_img2, movie_img3, id, rownum r
+    	from(
+        select movie_num, movie_name, movie_price, movie_content, movie_genre, movie_grade, movie_cast, movie_date, movie_img1, movie_img2, movie_img3, id
+        from movie
+        <where>
+           <choose>
+           		<when test="col=='movie_cast'">
+           			movie_cast like '%'||#{word}||'%'
+           		</when>
+           		<when test="col=='movie_name'">
+           			movie_name like '%'||#{word}||'%'
+           		</when>	
+           		<when test="col=='movie_content'">
+           			movie_content like '%'||#{word}||'%'
+           		</when>	
+           		<when test="col=='movie_name_movie_content'">
+           			movie_name like '%'||#{word}||'%'
+           			or
+           			movie_content like '%'||#{word}||'%'
+           		</when>	
+           </choose>
+          </where>
+        order by movie_date desc
+        )
+	)
+	<![CDATA[                                  
+      where r>= #{sno} and r <=#{eno}
+      ]]>  
+	</select>
+	
+	<select id="index_list" resultType="MovieDTO">
+	select movie_num, movie_name, movie_price, movie_content, movie_genre_str, movie_grade, movie_cast, movie_date, movie_img1, movie_img2, movie_img3, id,  r
+	from(
+    select movie_num, movie_name, movie_price, movie_content, movie_genre_str, movie_grade, movie_cast, movie_date, movie_img1, movie_img2, movie_img3, id, rownum r
+    	from(
+        select movie_num, movie_name, movie_price, movie_content, movie_genre as movie_genre_str, movie_grade, movie_cast, movie_date, movie_img1, movie_img2, movie_img3, id
+        from movie
+        order by movie_date desc
+        )
+	)
+	</select>
+	
+	<select id="total" parameterType="Map" resultType="int">
+  	select count(*) 
+    from movie
+   <where>
+           <choose>
+           		<when test="col=='movie_cast'">
+           			movie_cast like '%'||#{word}||'%'
+           		</when>
+           		<when test="col=='movie_name'">
+           			movie_name like '%'||#{word}||'%'
+           		</when>	
+           		<when test="col=='movie_content'">
+           			movie_content like '%'||#{word}||'%'
+           		</when>	
+           		<when test="col=='movie_name_movie_content'">
+           			movie_name like '%'||#{word}||'%'
+           			or
+           			movie_content like '%'||#{word}||'%'
+           		</when>	
+           </choose>
+          </where>
+  </select>
+  
+    <select id="read" parameterType="int" resultType="MovieDTO">
+    select movie_num, movie_name, movie_price, movie_content, movie_genre as movie_genre_str, 
+    movie_grade, movie_cast, movie_date, movie_img1, movie_img2, movie_img3, id
+	from movie                                
+    WHERE movie_num = #{movie_num}                   
+  </select>
+  
+  <delete id="delete" parameterType="int">
+	  delete from movie
+	  where movie_num = #{movie_num}
+	</delete>
+	
+	<select id="passCheck" parameterType="Map" resultType="int">
+    	select count(me.id)
+		from movie mo, member me
+		where  mo.id = me.id and me.pw= #{pw}
+    </select> 
+    
+    <update id="update" parameterType="MovieDTO">
+	 update movie set 
+	 movie_name= #{movie_name}, 
+	 movie_price= #{movie_price}, 
+	 movie_content= #{movie_content}, 
+	 movie_genre= #{movie_genre_str}, 
+	 movie_grade= #{movie_grade}, 
+	 movie_cast= #{movie_cast}, 
+	 movie_date = #{movie_date}
+	 where movie_num= #{movie_num}
+	</update>
+
+	
+</mapper>

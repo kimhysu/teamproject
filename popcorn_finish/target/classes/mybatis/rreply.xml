@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="spring.mapper.popcorn.RreplyMapper">
+	<select id="rcount" parameterType="int" resultType="int">
+		select count(*) from rreply
+		where review_num = #{review_num}
+	</select>
+	
+	<insert id="create" parameterType="RreplyDTO">
+		insert into rreply(rreply_num,rreply_content,
+		rreply_date,id,review_num)
+		values((select nvl(max(rreply_num),0)+1 from rreply),#{rreply_content},
+		sysdate,#{id},#{review_num})
+	</insert>
+	
+	<update id="update" parameterType="RreplyDTO">
+		update rreply
+		set rreply_content = #{rreply_content}
+		where rreply_num = #{rreply_num}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete from rreply
+		where rreply_num = #{rreply_num}
+	</delete>
+	
+	<delete id="rdelete" parameterType="int">
+		delete from rreply
+		where review_num = #{review_num}
+	</delete>
+	
+	<select id="list" parameterType="Map" resultType="RreplyDTO">
+		select rreply_num, rreply_content, to_char(rreply_date,'yyyy-mm-dd') rreply_date, id, review_num, r
+		FROM(
+    		select rreply_num, rreply_content, rreply_date, id, review_num, rownum r
+    		FROM(
+        		select rreply_num, rreply_content, rreply_date, id, review_num
+        		from rreply
+        		where review_num = #{review_num}
+        		order by rreply_num DESC
+            )
+      	)
+      	<![CDATA[
+      	WHERE r >= #{sno} and r <= #{eno}
+      	]]>
+	</select>
+	
+	<select id="read" parameterType="int" resultType="RreplyDTO">
+		select * from rreply
+		where rreply_num = #{rreply_num}
+	</select>
+	
+	<select id="total" parameterType="int" resultType="int">
+		select count(*) from rreply
+		where review_num = #{review_num}
+	</select>
+		
+</mapper>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cart!</title>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
+<script type="text/javascript">
+$(document).ready(function()){
+   //최상단 체크박스 클릭
+   $("#checkall").click(function(){
+      //클릭되었으면
+      if($("#checkall").prop("checked")){
+         //input태그의 name이 chk인 태그들을 찾아서 checked옵션을 true로 정의
+         $("input[name='chk']").prop("checked", true);
+      } else {
+         //클릭 안되어있으면, input태그의 name이 chk인 태그들을 찾아서 checked옵션을 false로 정의
+         $("input[name=chk]").prop("checked", false);
+      }
+   });
+})
+</script>
+
+
+</head>
+<body leftmargin="10%" rightmargin="10%">
+
+
+
+<hr/>
+영화 리스트
+<hr/>
+<form method="post" action="<?=site_url('cart_lib/add')?>">
+
+<input type="hidden" name="id" value="g1011" />
+<input type="hidden" name="name" value="sample1" />
+<input type="hidden" name="price" value="10000" />
+
+<table class="tablesorter" border="1" cellpadding="0" cellspacing="1">
+
+<thead>
+<tr>
+     <th style="text-align:center" width="30%">영화명</th>
+     <th style="text-align:center" width="30%">줄거리</th>
+     <th style="text-align:center" width="10%">원가</th>
+     <th style="text-align:center" width="15%">관련 영화</th>
+     <th width="15%"></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+     <td style="text-align:center" width="200px" height="300px"><img src="../images/아이언맨1.JPG" width="100%" height="100%">IRON MAN</td>
+     <td style="text-align:center">
+       영웅은 태어나지 않는다! 다만 만들어질 뿐이다!천재적인 두뇌와 재능으로 세계 최강의 무기업체를 이끄는 CEO이자, 타고난 매력으로 셀러브리티 못지않은 화려한 삶을 살아가던 억만장자 토니 스타크.
+     </td>
+     <td style="text-align:center">3,000원</td>
+     <td style="text-align:center">
+     Series : 
+    <select name="series">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+    </select>
+     </td>
+     <td style="text-align:center">
+       <input type="submit" value="장바구니 담기" />
+     </td>
+</tr>
+<tr>
+     <td style="text-align:center" width="200px" height="300px"><img src="../images/캡틴아메리카1.JPG" width="100%" height="100%">CAPTAIN AMERICA</td>
+     <td style="text-align:center">
+       포기를 모르는 자의 새로운 이름 ‘퍼스트 어벤져’세계 전쟁으로 암흑에 빠진 시기, 한 남자가 군 입대를 자원한다. 그의 이름은 ‘스티브 로저스’. 남들보다 왜소하고 마른 체격으로 인해 입대마저 번번히 거부당하던 그는 포기를 모르는 근성과 강한 희생 정신을 인정받아 최고의 전사를 양성하는 ‘슈퍼 솔져’ 프로젝트에 스카우트된다.
+     </td>
+     <td style="text-align:center">3,000원</td>
+     <td style="text-align:center">
+     Series : 
+    <select name="series">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+    </select>
+     </td>
+     <td style="text-align:center">
+       <input type="submit" value="장바구니 담기" />
+     </td>
+</tr>
+</tbody>
+
+</table>
+
+</form>
+
+
+
+<hr/>
+장바구니 내역
+<hr/>
+<form method="post" action="<?=site_url('cart_lib/update')?>">
+
+<table class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+
+<thead>
+<tr>
+   <th><input type="checkbox" id="checkall" /></th>
+   <th style="text-align:center" width="20%">영화명</th>
+    <th style="text-align:center" width="20%">상품 옵션</th>
+    <th style="text-align:center" width="20%">원가</th>
+    <th style="text-align:center" width="20%">합계</th>
+    <th style="text-align:center" width="20%"></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+   <td><input type="checkbox" name="chk" /></td>
+     <td style="text-align: center">IRON MAN</td>
+     <td style="text-align: center">
+      단품 / 패키지
+     </td>
+     <td style="text-align:center">3,000원</td>
+     <td style="text-align:center">3,000원</td>
+     <td style="text-align:center">
+       <input type="button" onclick="location.href=''" value="장바구니 삭제" />
+    </td>
+</tr>
+<tr>
+   <td><input type="checkbox" name="chk" /></td>
+     <td style="text-align: center">CAPTAIN AMERICA</td>
+     <td style="text-align: center">
+      단품 / 패키지
+     </td>
+     <td style="text-align:center">3,000원</td>
+     <td style="text-align:center">3,000원</td>
+     <td style="text-align:center">
+        <input type="button" onclick="location.href=''" value="장바구니 삭제" />
+    </td>
+</tr>
+   <td colspan="4" align="center"></td>
+   <td style="text-align:center"></td>
+   <td style="text-align:center"></td>
+</tbody>
+
+<tfoot>
+<tr>
+    <td colspan="6" style="text-align: center">
+        <input type="button" onclick="location.href='<?=site_url('cart_lib/destroy')?>'" value="영화목록" />
+        <input type="submit" value="결제화면" />
+    </td>
+</tr>
+</tfoot>
+
+</table>
+
+</form>
+
+</body>
+</html>
