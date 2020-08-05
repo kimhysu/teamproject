@@ -1,2 +1,2 @@
 # teamproject
-popcorn project 저장소입니다.
+popcorn project 저장소입니다
