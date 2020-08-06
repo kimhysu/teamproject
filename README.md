@@ -1,10 +1,9 @@
 # teamproject
 
-*사이트: popcorn
-
-*주제: 회원맞춤 영화 추천 및 결제
-
-
+*사이트: popcorn<br>
+*주제: 회원맞춤 영화 추천 및 결제<br>
+*개발환경<br>
+*TOOL/Framework: Spring<br>언어: Java, jQuery, Ajax, JSP, HTML5, JavaScript<br>DB: Oracle
 
 
 
